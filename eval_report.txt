@@ -1,0 +1,23 @@
+=== Student Stress Prediction � Model Evaluation ===
+
+Dataset size  : 1200 samples
+Train / Test  : 960 / 240
+Best Model    : Logistic Regression
+Test Accuracy : 100.00%
+5-Fold CV     : 100.00% � 0.00%
+
+Model Comparison:
+  Logistic Regression: 100.00%
+  Random Forest: 100.00%
+  XGBoost: 100.00%
+
+Per-Class Report:
+              precision    recall  f1-score   support
+
+        high       1.00      1.00      1.00        80
+         low       1.00      1.00      1.00        80
+      medium       1.00      1.00      1.00        80
+
+    accuracy                           1.00       240
+   macro avg       1.00      1.00      1.00       240
+weighted avg       1.00      1.00      1.00       240

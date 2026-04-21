@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Stress Predictor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      padding: 30px 16px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: #1a202c;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #718096;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 5px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #2d3748;
+      transition: border 0.2s;
+      outline: none;
+    }
+
+    .field input:focus { border-color: #667eea; }
+
+    .hint {
+      font-size: 0.72rem;
+      color: #a0aec0;
+      margin-top: 3px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: opacity 0.2s;
+    }
+
+    button[type="submit"]:hover { opacity: 0.92; }
+
+    /* Result card */
+    .result-card {
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .result-high   { background: #fff5f5; border: 2px solid #fc8181; }
+    .result-medium { background: #fffbeb; border: 2px solid #f6ad55; }
+    .result-low    { background: #f0fff4; border: 2px solid #68d391; }
+
+    .result-label {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .high-text   { color: #e53e3e; }
+    .medium-text { color: #d69e2e; }
+    .low-text    { color: #38a169; }
+
+    .result-sub {
+      color: #718096;
+      font-size: 0.88rem;
+    }
+
+    /* Probability bars */
+    .prob-section h3 {
+      font-size: 0.95rem;
+      color: #4a5568;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .prob-row {
+      margin-bottom: 10px;
+    }
+
+    .prob-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #4a5568;
+      margin-bottom: 4px;
+    }
+
+    .prob-bar-bg {
+      background: #edf2f7;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .prob-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: width 0.6s ease;
+    }
+
+    /* Risk factors */
+    .risk-section {
+      margin-top: 16px;
+    }
+
+    .risk-section h3 {
+      font-size: 0.95rem;
+      color: #4a5568;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .risk-tag {
+      display: inline-block;
+      background: #fff5f5;
+      color: #e53e3e;
+      border: 1px solid #fc8181;
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      margin: 3px 4px 3px 0;
+    }
+
+    /* Tips */
+    .tips-card {
+      background: #ebf8ff;
+      border: 1.5px solid #90cdf4;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+
+    .tips-card h3 {
+      color: #2b6cb0;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .tips-card ul {
+      list-style: none;
+    }
+
+    .tips-card ul li {
+      font-size: 0.88rem;
+      color: #2d3748;
+      padding: 6px 0;
+      border-bottom: 1px solid #bee3f8;
+      line-height: 1.5;
+    }
+
+    .tips-card ul li:last-child { border: none; }
+
+    .error {
+      background: #fff5f5;
+      border: 1.5px solid #fc8181;
+      border-radius: 10px;
+      padding: 14px;
+      color: #e53e3e;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>🎓 Student Stress Predictor</h1>
+  <p class="subtitle">Enter your daily habits to predict your stress level</p>
+
+  {% if error %}
+  <div class="error">⚠️ {{ error }}</div>
+  {% endif %}
+
+  <!-- Input Form -->
+  <div class="card">
+    <form action="/predict" method="POST">
+      <div class="grid">
+
+        <div class="field">
+          <label>Study Hours</label>
+          <input type="number" name="study" min="0" max="12" step="0.5" placeholder="e.g. 4" required/>
+          <div class="hint">Hours per day (0–12)</div>
+        </div>
+
+        <div class="field">
+          <label>Sleep Hours</label>
+          <input type="number" name="sleep" min="0" max="12" step="0.5" placeholder="e.g. 7" required/>
+          <div class="hint">Hours per night (0–12)</div>
+        </div>
+
+        <div class="field">
+          <label>Attendance (%)</label>
+          <input type="number" name="attendance" min="0" max="100" placeholder="e.g. 80" required/>
+          <div class="hint">Class attendance (0–100)</div>
+        </div>
+
+        <div class="field">
+          <label>Assignment Score</label>
+          <input type="number" name="assignments" min="0" max="100" placeholder="e.g. 75" required/>
+          <div class="hint">Average score (0–100)</div>
+        </div>
+
+        <div class="field">
+          <label>Screen Time (hrs)</label>
+          <input type="number" name="screen" min="0" max="16" step="0.5" placeholder="e.g. 5" required/>
+          <div class="hint">Daily screen time (hours)</div>
+        </div>
+
+        <div class="field">
+          <label>Physical Activity</label>
+          <input type="number" name="activity" min="0" max="6" placeholder="e.g. 3" required/>
+          <div class="hint">Days per week (0–6)</div>
+        </div>
+
+        <div class="field">
+          <label>Exam Score</label>
+          <input type="number" name="exam" min="0" max="100" placeholder="e.g. 70" required/>
+          <div class="hint">Latest exam score (0–100)</div>
+        </div>
+
+        <div class="field">
+          <label>Social Interaction</label>
+          <input type="number" name="social" min="0" max="6" placeholder="e.g. 3" required/>
+          <div class="hint">Days per week (0–6)</div>
+        </div>
+
+      </div>
+      <button type="submit">Predict Stress Level →</button>
+    </form>
+  </div>
+
+  <!-- Results -->
+  {% if prediction %}
+
+  {% if stress_level == "high" %}
+    <div class="result-card result-high">
+      <div class="result-label high-text">🔴 {{ prediction }}</div>
+      <div class="result-sub">Your current lifestyle indicates high stress. Please take action.</div>
+    </div>
+  {% elif stress_level == "medium" %}
+    <div class="result-card result-medium">
+      <div class="result-label medium-text">🟡 {{ prediction }}</div>
+      <div class="result-sub">Moderate stress detected. Small changes can make a big difference.</div>
+    </div>
+  {% else %}
+    <div class="result-card result-low">
+      <div class="result-label low-text">🟢 {{ prediction }}</div>
+      <div class="result-sub">You're managing stress well. Keep up the healthy habits!</div>
+    </div>
+  {% endif %}
+
+  <!-- Probabilities -->
+  <div class="card">
+    <div class="prob-section">
+      <h3>📊 Confidence Scores</h3>
+      {% for label, prob in probabilities.items() %}
+      <div class="prob-row">
+        <div class="prob-label-row">
+          <span>{{ label }}</span>
+          <span>{{ prob }}%</span>
+        </div>
+        <div class="prob-bar-bg">
+          <div class="prob-bar-fill" style="width: {{ prob }}%"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if risk_factors %}
+    <div class="risk-section">
+      <h3>⚠️ Primary Risk Factors</h3>
+      {% for factor in risk_factors %}
+      <span class="risk-tag">{{ factor }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Recommendations -->
+  <div class="tips-card">
+    <h3>💡 Personalized Recommendations</h3>
+    <ul>
+      {% for tip in tips %}
+      <li>{{ tip }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  {% endif %}
+
+</div>
+</body>
+</html>
