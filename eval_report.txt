@@ -1,10 +1,10 @@
-=== Student Stress Prediction ï¿½ Model Evaluation ===
+=== Student Stress Prediction — Model Evaluation ===
 
 Dataset size  : 1200 samples
 Train / Test  : 960 / 240
 Best Model    : Logistic Regression
 Test Accuracy : 100.00%
-5-Fold CV     : 100.00% ï¿½ 0.00%
+5-Fold CV     : 100.00% ± 0.00%
 
 Model Comparison:
   Logistic Regression: 100.00%
